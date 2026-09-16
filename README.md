@@ -1,11 +1,24 @@
-﻿# 🛡️ Sentinel Guard — Enterprise Windows Endpoint Security & Telemetry Engine
+# 🛡️ Sentinel Guard — Enterprise Windows Endpoint Security & Telemetry Engine
 
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-0078D6.svg?logo=windows)](https://microsoft.com/windows)
 [![.NET: 8.0](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![Database: SQLite](https://img.shields.io/badge/Database-SQLite-003B57.svg?logo=sqlite)](https://sqlite.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Download Installer](https://img.shields.io/badge/Download-Installer%20(.exe)-2ea44f?style=for-the-badge&logo=windows)](https://drive.google.com/file/d/1X7gUtYIf5DOHz3Tv4P7P4sHGotvjDHKK/view?usp=sharing)
 
 **Sentinel Guard** is a lightweight, real-time endpoint threat detection and forensics agent built in **C# (.NET 8) with WPF**. Engineered for security analysts, system administrators, and developers, it tracks live process hierarchies, unmasks rogue parent-child chains, audits active network sockets, inspects startup persistence, and provides an isolated quarantine vault.
+
+---
+
+## 📥 Download Windows Setup Installer
+
+Ready-to-install standalone setup package for Windows 10 & 11:
+
+| Package | Size | Direct Download | Alternative Mirror |
+| :--- | :--- | :--- | :--- |
+| **Sentinel Guard Setup (v3.0.0)** | ~46.8 MB | 🚀 **[Download from Google Drive](https://drive.google.com/file/d/1X7gUtYIf5DOHz3Tv4P7P4sHGotvjDHKK/view?usp=sharing)** | 📦 **[GitHub Releases](../../releases)** |
+
+> **Quick Install:** Download and run `SentinelGuard_Setup.exe`, follow the on-screen setup prompts, and launch Sentinel Guard directly from your Desktop or Start Menu.
 
 ---
 
