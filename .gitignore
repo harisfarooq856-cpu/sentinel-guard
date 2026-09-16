@@ -1,0 +1,35 @@
+﻿## Build results
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+dist/
+dist_installer/
+*.exe
+*.dll
+*.pdb
+*.msi
+*.appx
+
+## SQLite & Local Databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+sentinel.db
+
+## Logs
+*.log
+
+## Visual Studio & Rider / Resharper
+.vs/
+.idea/
+.vscode/
+*.user
+*.userprefs
+*.suo
+*.sln.docstates
+
+## OS Metadata
+.DS_Store
+Thumbs.db

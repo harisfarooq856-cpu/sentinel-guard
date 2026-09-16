@@ -1,0 +1,24 @@
+﻿# Auto-detect text files and normalize line endings
+* text=auto
+
+# C# and XAML files use CRLF for Windows compatibility
+*.cs text eol=crlf
+*.xaml text eol=crlf
+*.csproj text eol=crlf
+*.sln text eol=crlf
+*.iss text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Markdown and JSON
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binaries & Icons
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary

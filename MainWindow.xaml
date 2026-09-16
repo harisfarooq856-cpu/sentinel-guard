@@ -1,0 +1,720 @@
+<Window x:Class="SentinelGuard.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sentinel Guard — Enterprise Security &amp; Automation Detection Suite" 
+        Height="640" Width="1180"
+        MinHeight="450" MinWidth="850"
+        WindowStartupLocation="Manual"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResizeWithGrip"
+        Background="#F8FAFC" 
+        FontFamily="Segoe UI, Arial">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#2563EB"/>
+        <SolidColorBrush x:Key="TextMain" Color="#0F172A"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#64748B"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#E2E8F0"/>
+        <SolidColorBrush x:Key="CardBg" Color="#FFFFFF"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bdr" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RiskBadgeButtonStyle" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bdrBadge" Background="{TemplateBinding Background}" CornerRadius="12" Padding="10,2,10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdrBadge" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="8,0,8,0"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+
+        <!-- System Selection Color Overrides: replace harsh electric blue with modern subtle tint -->
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#EFF6FF"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#0F172A"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F8FAFC"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#0F172A"/>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#F1F5F9"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F8FAFC"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                    <Setter Property="Foreground" Value="#0F172A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="6,0">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                    <Setter Property="Foreground" Value="#0F172A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- Brand -->
+                <StackPanel DockPanel.Dock="Top" Margin="16,18,16,20">
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="ImgAppLogo" Width="32" Height="32" Margin="0,0,10,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Sentinel Guard" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+                            <TextBlock Text="v3.0 Enterprise Suite" FontSize="11" Foreground="#059669" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation Links -->
+                <StackPanel Margin="10,0,10,0">
+                    <Button x:Name="NavBtnAlerts" Click="NavBtn_Click" Tag="0" Content="🚈 Live Threats &amp; Feed" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="#EFF6FF" Foreground="#2563EB" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnNetwork" Click="NavBtn_Click" Tag="1" Content="🌐 Network &amp; Sockets" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnProcs" Click="NavBtn_Click" Tag="2" Content="⚩️ Active Processes" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnApps" Click="NavBtn_Click" Tag="3" Content="📦 Installed Software" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnStartup" Click="NavBtn_Click" Tag="4" Content="⚡️ Startup &amp; Services" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnQuarantine" Click="NavBtn_Click" Tag="5" Content="🔒 Quarantine Vault" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                    <Button x:Name="NavBtnSettings" Click="NavBtn_Click" Tag="6" Content="🛡️ Whitelist &amp; Settings" Height="38" HorizontalContentAlignment="Left" Padding="12,0,0,0" Background="Transparent" Foreground="#475569" BorderThickness="0" Margin="0,2,0,2"/>
+                </StackPanel>
+
+                <!-- Status Footer -->
+                <Border DockPanel.Dock="Bottom" Margin="14" Padding="10" Background="#F1F5F9" CornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Fill="#10B981" Margin="0,0,6,0"/>
+                            <TextBlock Text="ASYNC LIVE PROTECTION" FontSize="10" FontWeight="Bold" Foreground="#065F46"/>
+                        </StackPanel>
+                        <TextBlock x:Name="TxtEngineStatus" Text="Zero-Lag Engine Active" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- MAIN CONTENT -->
+        <Grid Grid.Column="1" Margin="14,8,14,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- TOP TITLE BAR STRIP WITH IN-APP WINDOW CONTROLS -->
+            <Grid Grid.Row="0" Margin="0,2,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🛡️ Sentinel Guard Console" FontSize="13" FontWeight="Bold" Foreground="#334155"/>
+                    <TextBlock Text="— Enterprise Zero-Lag Protection" FontSize="11" Foreground="#94A3B8" Margin="8,1,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Dedicated In-App Window Controls -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Click="BtnMin_Click" ToolTip="Minimize" Width="30" Height="24" Background="#F1F5F9" Foreground="#475569" BorderThickness="0" Margin="0,0,4,0" FontSize="11" FontWeight="Bold" Content="—"/>
+                    <Button Click="BtnMax_Click" ToolTip="Maximize / Restore" Width="30" Height="24" Background="#F1F5F9" Foreground="#475569" BorderThickness="0" Margin="0,0,4,0" FontSize="11" Content="🗖"/>
+                    <Button Click="BtnClose_Click" ToolTip="Close Application" Width="30" Height="24" Background="#FEE2E2" Foreground="#DC2626" BorderThickness="0" FontSize="11" FontWeight="Bold" Content="✕"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- KPI HEADER CARDS -->
+            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,10">
+                <!-- Card 1 -->
+                <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8,12,8" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="🚈 Threats Detected" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TxtThreatsCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="#DC2626" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 2 -->
+                <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8,12,8" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="🌐 Active Sockets" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TxtSocketsCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="#2563EB" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 3 -->
+                <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8,12,8" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="⚩️ Running Processes" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TxtProcsCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="#0F172A" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 4 -->
+                <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,8,12,8">
+                    <StackPanel>
+                        <TextBlock Text="📦 Installed Software" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TxtAppsCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="#0F172A" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- TABS CONTAINER -->
+            <Grid Grid.Row="2">
+
+                <!-- TAB 0: LIVE THREATS &amp; FEED -->
+                <Grid x:Name="TabAlerts" Visibility="Visible">
+                    <DockPanel>
+                        <!-- Toolbar -->
+                        <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="TxtSearchEvents" Grid.Column="0" TextChanged="TxtSearchEvents_TextChanged" Height="34" VerticalContentAlignment="Center" Padding="8,0,8,0" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Click="MarkEventSafe_Click" Content="🛡️ Mark Safe" Background="#059669" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="TrustParentEvent_Click" Content="🤖 Trust Parent Tool" ToolTip="Whitelist the parent automation app (e.g. Antigravity) everywhere" Background="#2563EB" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="TerminateEventProc_Click" Content="🚫 Terminate" Background="#DC2626" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="QuarantineEvent_Click" Content="🔒 Quarantine" Background="#D97706" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="DismissEvent_Click" Content="🗑️ Remove" Background="#475569" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="ClearOldEvents_Click" Content="🧹 Clear Log" ToolTip="Clear historical events from previous sessions" Background="#64748B" Foreground="White" Height="34" Padding="10,0,10,0" BorderThickness="0"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- Bulk Operations Toolbar -->
+                        <Border DockPanel.Dock="Top" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,0,8">
+                            <DockPanel>
+                                <TextBlock Text="⚡ Bulk Actions:" FontWeight="Bold" Foreground="#475569" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Click="BulkAlertsSafe_Click" Content="🛡️ Bulk Mark Safe" Background="#059669" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkAlertsTrustParent_Click" Content="🤖 Bulk Trust Parents" Background="#2563EB" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkAlertsKill_Click" Content="🚫 Bulk Kill" Background="#DC2626" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkAlertsRemove_Click" Content="🗑️ Bulk Remove" Background="#475569" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" FontSize="11"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <!-- DataGrid Container with Smooth Virtualization &amp; Scrolling -->
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridEvents" AutoGenerateColumns="False" IsReadOnly="True" SelectionUnit="FullRow"
+                                        GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" 
+                                        Background="White" BorderThickness="0" RowHeight="38"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        VirtualizingStackPanel.IsVirtualizing="True"
+                                        VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <DataGrid.Columns>
+                                    <!-- Checkbox Column -->
+                                    <DataGridTemplateColumn Width="38">
+                                        <DataGridTemplateColumn.Header>
+                                            <CheckBox x:Name="ChkSelectAllAlerts" Click="SelectAllAlerts_Click" ToolTip="Select All"/>
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- # Number -->
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="140"/>
+                                    <DataGridTextColumn Header="Event Type" Binding="{Binding EventType}" Width="160"/>
+                                    <DataGridTextColumn Header="Process Name" Binding="{Binding Name}" Width="160"/>
+                                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="65"/>
+                                    <DataGridTextColumn Header="Spawned By (Parent Process)" Binding="{Binding SpawnedBy}" Width="190"/>
+                                    <DataGridTextColumn Header="User" Binding="{Binding DisplayUser}" Width="100"/>
+
+                                    <!-- Interactive Risk Badge -->
+                                    <DataGridTemplateColumn Header="Risk Level" Width="105">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource RiskBadgeButtonStyle}" Background="{Binding RiskBadgeBg}" Click="EventRiskBadge_Click" ToolTip="Click to inspect security reasons">
+                                                    <TextBlock Text="{Binding Risk}" Foreground="{Binding RiskBadgeFg}" FontWeight="SemiBold" FontSize="11"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Details &amp; Reasons" Width="290">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,2">
+                                                    <Button Click="EventDetailsView_Click" Content="🔍 View" DockPanel.Dock="Right" Background="#F1F5F9" Foreground="#2563EB" FontSize="11" Padding="6,2,6,2" BorderThickness="0" Margin="4,0,0,0" ToolTip="Click to view full security audit details"/>
+                                                    <TextBlock Text="{Binding Details}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#334155" FontSize="12"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Destination IP" Binding="{Binding RemoteIp}" Width="140"/>
+                                    <DataGridTextColumn Header="Executable Path" Binding="{Binding Path}" Width="260"/>
+
+                                    <!-- Inline Row Actions -->
+                                    <DataGridTemplateColumn Header="Quick Actions" Width="260">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Click="RowEventSafe_Click" Content="🛡️ Safe" Background="#E6F4EA" Foreground="#065F46" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowEventTrustParent_Click" Content="🤖 Trust Parent" Background="#EFF6FF" Foreground="#1E40AF" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0" ToolTip="Whitelist parent automation app everywhere"/>
+                                                    <Button Click="RowEventKill_Click" Content="🚫 Kill" Background="#FEE2E2" Foreground="#991B1B" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowEventQuarantine_Click" Content="🔒" Background="#FEF3C7" Foreground="#92400E" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowEventDismiss_Click" Content="🗑️" Background="#F1F5F9" Foreground="#64748B" FontSize="11" Padding="6,2,6,2" BorderThickness="0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 1: NETWORK &amp; SOCKETS -->
+                <Grid x:Name="TabNetwork" Visibility="Collapsed">
+                    <DockPanel>
+                        <!-- Toolbar -->
+                        <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="TxtSearchNetwork" Grid.Column="0" TextChanged="TxtSearchNetwork_TextChanged" Height="34" VerticalContentAlignment="Center" Padding="8,0,8,0" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Click="MarkNetworkSafe_Click" Content="🛡️ Mark Safe" Background="#059669" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="TrustParentNetwork_Click" Content="🤖 Trust Parent Tool" ToolTip="Whitelist parent automation app everywhere" Background="#2563EB" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="KillSocket_Click" Content="🚫 Kill Socket" Background="#DC2626" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="RefreshNetwork_Click" Content="🔄 Rescan" Background="#475569" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- Bulk Operations Toolbar -->
+                        <Border DockPanel.Dock="Top" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,0,8">
+                            <DockPanel>
+                                <TextBlock Text="⚡ Bulk Actions:" FontWeight="Bold" Foreground="#475569" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Click="BulkNetworkSafe_Click" Content="🛡️ Bulk Mark Safe" Background="#059669" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkNetworkTrustParent_Click" Content="🤖 Bulk Trust Parents" Background="#2563EB" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkNetworkKill_Click" Content="🚫 Bulk Kill" Background="#DC2626" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" FontSize="11"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridNetwork" AutoGenerateColumns="False" IsReadOnly="True" SelectionUnit="FullRow"
+                                        GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" 
+                                        Background="White" BorderThickness="0" RowHeight="38"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        VirtualizingStackPanel.IsVirtualizing="True"
+                                        VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <DataGrid.Columns>
+                                    <!-- Checkbox Column -->
+                                    <DataGridTemplateColumn Width="38">
+                                        <DataGridTemplateColumn.Header>
+                                            <CheckBox x:Name="ChkSelectAllNetwork" Click="SelectAllNetwork_Click" ToolTip="Select All"/>
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Proto" Binding="{Binding Protocol}" Width="60"/>
+                                    <DataGridTextColumn Header="Process Name" Binding="{Binding ProcessName}" Width="160"/>
+                                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="65"/>
+                                    <DataGridTextColumn Header="Spawned By (Parent Process)" Binding="{Binding SpawnedBy}" Width="190"/>
+                                    <DataGridTextColumn Header="User" Binding="{Binding DisplayUser}" Width="100"/>
+
+                                    <DataGridTemplateColumn Header="Risk Level" Width="105">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource RiskBadgeButtonStyle}" Background="{Binding RiskBadgeBg}" Click="NetworkRiskBadge_Click" ToolTip="Click to inspect security reasons">
+                                                    <TextBlock Text="{Binding Risk}" Foreground="{Binding RiskBadgeFg}" FontWeight="SemiBold" FontSize="11"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Header="Local Endpoint" Binding="{Binding LocalEndpoint}" Width="160"/>
+                                    <DataGridTextColumn Header="Remote Endpoint" Binding="{Binding RemoteEndpoint}" Width="180"/>
+                                    <DataGridTextColumn Header="State" Binding="{Binding State}" Width="100"/>
+                                    
+                                    <DataGridTemplateColumn Header="Executable Path" Width="260">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,2">
+                                                    <Button Click="NetworkDetailsView_Click" Content="🔍 View" DockPanel.Dock="Right" Background="#F1F5F9" Foreground="#2563EB" FontSize="11" Padding="6,2,6,2" BorderThickness="0" Margin="4,0,0,0" ToolTip="Click to inspect"/>
+                                                    <TextBlock Text="{Binding Path}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#334155" FontSize="12"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- Inline Socket Actions -->
+                                    <DataGridTemplateColumn Header="Quick Actions" Width="230">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Click="RowNetworkSafe_Click" Content="🛡️ Safe" Background="#E6F4EA" Foreground="#065F46" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowNetworkTrustParent_Click" Content="🤖 Trust Parent" Background="#EFF6FF" Foreground="#1E40AF" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0" ToolTip="Whitelist parent automation app everywhere"/>
+                                                    <Button Click="RowNetworkKill_Click" Content="🚫 Kill" Background="#FEE2E2" Foreground="#991B1B" FontSize="11" Padding="6,2,6,2" BorderThickness="0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 2: ACTIVE PROCESSES -->
+                <Grid x:Name="TabProcs" Visibility="Collapsed">
+                    <DockPanel>
+                        <!-- Toolbar -->
+                        <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="TxtSearchProcs" Grid.Column="0" TextChanged="TxtSearchProcs_TextChanged" Height="34" VerticalContentAlignment="Center" Padding="8,0,8,0" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Click="MarkProcSafe_Click" Content="🛡️ Mark Safe" Background="#059669" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="TrustParentProc_Click" Content="🤖 Trust Parent Tool" ToolTip="Whitelist parent automation app everywhere" Background="#2563EB" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="TerminateSelectedProc_Click" Content="🚫 Terminate" Background="#DC2626" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0" Margin="0,0,6,0"/>
+                                <Button Click="RefreshProcs_Click" Content="🔄 Rescan" Background="#475569" Foreground="White" Height="34" Padding="12,0,12,0" BorderThickness="0"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- Bulk Operations Toolbar -->
+                        <Border DockPanel.Dock="Top" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,0,8">
+                            <DockPanel>
+                                <TextBlock Text="⚡ Bulk Actions:" FontWeight="Bold" Foreground="#475569" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Click="BulkProcsSafe_Click" Content="🛡️ Bulk Mark Safe" Background="#059669" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkProcsTrustParent_Click" Content="🤖 Bulk Trust Parents" Background="#2563EB" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" Margin="0,0,6,0" FontSize="11"/>
+                                    <Button Click="BulkProcsKill_Click" Content="🚫 Bulk Kill" Background="#DC2626" Foreground="White" Height="26" Padding="10,0" BorderThickness="0" FontSize="11"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridProcs" AutoGenerateColumns="False" IsReadOnly="True" SelectionUnit="FullRow"
+                                        GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" 
+                                        Background="White" BorderThickness="0" RowHeight="38"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        VirtualizingStackPanel.IsVirtualizing="True"
+                                        VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <DataGrid.Columns>
+                                    <!-- Checkbox Column -->
+                                    <DataGridTemplateColumn Width="38">
+                                        <DataGridTemplateColumn.Header>
+                                            <CheckBox x:Name="ChkSelectAllProcs" Click="SelectAllProcs_Click" ToolTip="Select All"/>
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Process Name" Binding="{Binding Name}" Width="180"/>
+                                    <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="65"/>
+                                    <DataGridTextColumn Header="Spawned By (Parent Process)" Binding="{Binding SpawnedBy}" Width="190"/>
+                                    <DataGridTextColumn Header="User" Binding="{Binding DisplayUser}" Width="100"/>
+                                    <DataGridTextColumn Header="Memory (MB)" Binding="{Binding MemoryMB}" Width="95"/>
+
+                                    <DataGridTemplateColumn Header="Risk Level" Width="105">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource RiskBadgeButtonStyle}" Background="{Binding RiskBadgeBg}" Click="ProcRiskBadge_Click" ToolTip="Click to inspect security reasons">
+                                                    <TextBlock Text="{Binding Risk}" Foreground="{Binding RiskBadgeFg}" FontWeight="SemiBold" FontSize="11"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Binary Executable Path" Width="320">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,2">
+                                                    <Button Click="ProcDetailsView_Click" Content="🔍 View" DockPanel.Dock="Right" Background="#F1F5F9" Foreground="#2563EB" FontSize="11" Padding="6,2,6,2" BorderThickness="0" Margin="4,0,0,0" ToolTip="Click to inspect"/>
+                                                    <TextBlock Text="{Binding ExePath}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#334155" FontSize="12"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- Inline Process Actions -->
+                                    <DataGridTemplateColumn Header="Quick Actions" Width="260">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Click="RowProcSafe_Click" Content="🛡️ Safe" Background="#E6F4EA" Foreground="#065F46" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowProcTrustParent_Click" Content="🤖 Trust Parent" Background="#EFF6FF" Foreground="#1E40AF" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0" ToolTip="Whitelist parent automation app everywhere"/>
+                                                    <Button Click="RowProcKill_Click" Content="🚫 Kill" Background="#FEE2E2" Foreground="#991B1B" FontSize="11" Padding="6,2,6,2" Margin="0,0,4,0" BorderThickness="0"/>
+                                                    <Button Click="RowProcQuarantine_Click" Content="🔒" Background="#FEF3C7" Foreground="#92400E" FontSize="11" Padding="6,2,6,2" BorderThickness="0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 3: INSTALLED SOFTWARE -->
+                <Grid x:Name="TabApps" Visibility="Collapsed">
+                    <DockPanel>
+                        <TextBox x:Name="TxtSearchApps" DockPanel.Dock="Top" TextChanged="TxtSearchApps_TextChanged" Height="34" VerticalContentAlignment="Center" Padding="8,0,8,0" Margin="0,0,0,10"/>
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridApps" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" Background="White" BorderThickness="0" RowHeight="36" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Software Name" Binding="{Binding Name}" Width="260"/>
+                                    <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="120"/>
+                                    <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}" Width="200"/>
+                                    <DataGridTextColumn Header="Install Date" Binding="{Binding InstallDate}" Width="130"/>
+                                    <DataGridTextColumn Header="Install Location" Binding="{Binding InstallLocation}" Width="260"/>
+                                    <DataGridTextColumn Header="Registry Hive" Binding="{Binding RegistryHive}" Width="160"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 4: STARTUP &amp; SERVICES -->
+                <Grid x:Name="TabStartup" Visibility="Collapsed">
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="TxtSearchStartup" Grid.Column="0" TextChanged="TxtSearchStartup_TextChanged" Height="34" VerticalContentAlignment="Center" Padding="8,0,8,0" Margin="0,0,12,0"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Click="MarkStartupSafe_Click" Content="🛡️ Mark as Safe" Background="#059669" Foreground="White" Height="34" Padding="14,0,14,0" BorderThickness="0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridStartup" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" Background="White" BorderThickness="0" RowHeight="36" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="180"/>
+                                    <DataGridTextColumn Header="Type" Binding="{Binding EntryType}" Width="130"/>
+                                    <DataGridTemplateColumn Header="Risk Level" Width="105">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{Binding RiskBadgeBg}" CornerRadius="12" Padding="10,2,10,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Risk}" Foreground="{Binding RiskBadgeFg}" FontWeight="SemiBold" FontSize="11"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Command / Path" Binding="{Binding Command}" Width="360"/>
+                                    <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="150"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 5: QUARANTINE VAULT -->
+                <Grid x:Name="TabQuarantine" Visibility="Collapsed">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button Click="RestoreQuarantine_Click" Content="↩️ Restore File" Background="#2563EB" Foreground="White" Height="34" Padding="14,0,14,0" BorderThickness="0" Margin="0,0,8,0"/>
+                            <Button Click="DeleteQuarantine_Click" Content="🗑️ Delete Permanently" Background="#DC2626" Foreground="White" Height="34" Padding="14,0,14,0" BorderThickness="0"/>
+                        </StackPanel>
+
+                        <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="2">
+                            <DataGrid x:Name="GridQuarantine" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" Background="White" BorderThickness="0" RowHeight="36" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                    <DataGridTextColumn Header="Original Path" Binding="{Binding OriginalPath}" Width="320"/>
+                                    <DataGridTextColumn Header="Quarantined At" Binding="{Binding QuarantinedAt}" Width="160"/>
+                                    <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="300"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+
+                <!-- TAB 6: WHITELIST &amp; SETTINGS -->
+                <Grid x:Name="TabSettings" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- Toggles Card -->
+                            <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="⚩️ Notification &amp; Alert Preferences" FontSize="14" FontWeight="SemiBold" Foreground="#0F172A" Margin="0,0,0,10"/>
+                                    <CheckBox x:Name="ChkSound" IsChecked="True" Content="Play sound alerts on Critical threats and suspicious data transfers" Margin="0,4,0,4"/>
+                                    <CheckBox x:Name="ChkToasts" IsChecked="True" Content="Windows Native Toast Desktop Notifications" Margin="0,4,0,4"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Whitelist Card -->
+                            <Border Background="#FFFFFF" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <TextBlock Text="🛡️ Trusted Whitelist Rules" FontSize="14" FontWeight="SemiBold" Foreground="#0F172A" Margin="0,0,0,6"/>
+                                    <TextBlock Text="Whitelisted executables, process names, or IPs bypass alerts." FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox x:Name="CmbWlType" Grid.Column="0" SelectedIndex="0" Height="30" Margin="0,0,6,0">
+                                            <ComboBoxItem Content="PATH"/>
+                                            <ComboBoxItem Content="NAME"/>
+                                            <ComboBoxItem Content="IP"/>
+                                        </ComboBox>
+                                        <TextBox x:Name="TxtWlValue" Grid.Column="1" Height="30" VerticalContentAlignment="Center" Margin="0,0,6,0"/>
+                                        <Button Click="AddWhitelist_Click" Grid.Column="2" Content="➕ Add Rule" Background="#2563EB" Foreground="White" Height="30" Padding="12,0,12,0" BorderThickness="0"/>
+                                    </Grid>
+
+                                    <DataGrid x:Name="GridWhitelist" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" Height="200" RowHeight="32">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="#" Binding="{Binding RowNumber}" Width="45"/>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                            <DataGridTextColumn Header="Rule Type" Binding="{Binding ItemType}" Width="100"/>
+                                            <DataGridTextColumn Header="Trusted Value" Binding="{Binding Value}" Width="350"/>
+                                            <DataGridTextColumn Header="Added Date" Binding="{Binding AddedAt}" Width="160"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                    <Button Click="DeleteWhitelist_Click" Content="❌ Remove Selected Rule" Background="#DC2626" Foreground="White" Height="34" Padding="14,0,14,0" BorderThickness="0" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
